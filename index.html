@@ -5,15 +5,20 @@
 <title>HTML5, CSS3 and JavaScript demo</title>
  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
  <script type="text/javascript">
+	 const _Notif = window.Notification;
 	 $(function() {
-	 	$('button').click(function() {
+	 	$('#button').click(function() {
 	   const notif = new window.Notification('foo');
 	   })
+ 	 	$('#button2').click(function() {
+ 	   const notif = new _Notif('foo');
+ 	   })
 	 })
  </script>
 </head>
 <body>
 
-<button>Nofify me</button>
+<button id='button'>Nofify me</button>
+<button id='button2'>Nofify me 2</button>
 </body>
 </html>
