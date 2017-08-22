@@ -1,31 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
-<title>HTML5, CSS3 and JavaScript demo</title>
- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
- <script type="text/javascript">
-	 const _Notif = window.Notification;
-	 $(function() {
-	 	$('#button').click(function() {
-	   const notif = new window.Notification('foo');
-	   })
- 	 	$('#button2').click(function() {
- 	   const notif = new _Notif('foo');
- 	   })
-  	 $('#button3').click(function() {
-  	   const notif = new window.Notification('foo');
-			 setTimeout(() => notif.close(), 10000)
-  	  })
-	 })
- </script>
+    <link rel="manifest" href="./manifest.json">
+    <title>HTML5, CSS3 and JavaScript demo</title>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script type="text/javascript">
+      const _Notif = window.Notification;
+      $(function () {
+        $('#button').click(function () {
+          const notif = new window.Notification('foo');
+        })
+        $('#button2').click(function () {
+          const notif = new _Notif('foo');
+        })
+        $('#button3').click(function () {
+          const notif = new window.Notification('foo');
+          setTimeout(() => notif.close(), 10000)
+        })
+        $('#button4').click(function () {
+          const myHeaders = new Headers();
+
+          myHeaders.append('Authorization', 'key=AAAAjdB-Ub8:APA91bHFuSNQi9_KQgscYbUfs-HWOCwEQwzoJ4L9MbgRgd9PZnF3kzyhpLfgmBnm3l3VpA-G7WJErH4U4sQqm19hG6-KLtCScoDs2YYXXCzYrkNW9tVX4hslmkx2pVeRUkrp-46Ykh-B');
+          myHeaders.append('Content-Type', 'application/json');
+
+
+          var myInit = {
+            method: 'POST',
+            headers: myHeaders,
+            mode: 'cors',
+            cache: 'default',
+            body: JSON.stringify({
+              registration_ids: [window.registrationId],
+              notification: {
+                title: 'test',
+                body: 'test body'
+              }
+            })
+          };
+
+          fetch(window.endpoint, myInit).then(function(response) {
+            console.log('notification sent');
+            return response.json();
+          }).then(response => {
+            console.log(response);
+          });
+        })
+      })
+    </script>
+    <script type="text/javascript" src="./pushapi.js"></script>
 </head>
 <body>
 <br>
 <button id='button'>Nofify me</button>
 <button id='button2'>Nofify me 2</button>
 <button id='button3'>Nofify me and close in 10sec</button>
+<button id='button4'>Nofify me through Push API</button>
 <input type="text />
-<iframe src="iframe.html" frameborder="0"></iframe>
+<iframe src=" iframe.html" frameborder="0"></iframe>
 </body>
 </html>
