@@ -1,5 +1,11 @@
 window.endpoint = null;
-window.registrationId = null
+window.registrationId = null;
+
+const register = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+
+navigator.serviceWorker.register = (worker, options) => {
+  return register(`preload.js?worker=${encodeURIComponent(worker)}`, options);
+};
 
 this.onpush = function (event) {
   console.log(event.data);

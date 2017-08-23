@@ -16,7 +16,6 @@ self.addEventListener('push', function (event) {
   }
 
   console.log('Received push', notificationTitle, notificationOptions, event);
-
   event.waitUntil(
     Promise.all([
       self.registration.showNotification(notificationTitle, notificationOptions)
