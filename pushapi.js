@@ -1,11 +1,47 @@
 window.endpoint = null;
 window.registrationId = null;
 
+let done = false;
+
 const register = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+const ready = navigator.serviceWorker.ready;
+
+function overrideSubscribe(registration) {
+  // const native = registration.pushManager.subscribe.bind(registration.pushManager);
+  registration.pushManager.subscribe = function(options) {
+    console.log('Overriding subscribe');
+    return fetch('https://updates.push.services.mozilla.com/v1/webpush/11-TESTING-11/registration', {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
+      },
+      body: JSON.stringify({"token":"11-TESTING-11-11"})
+    }).then(function(response) {
+      return response.json();
+    });
+  };
+  return registration;
+}
 
 navigator.serviceWorker.register = (worker, options) => {
-  return register(`preload.js?worker=${encodeURIComponent(worker)}`, options);
+  // return register(`preload.js?worker=${encodeURIComponent(worker)}`, options);
+  return register(worker, options).then(registration => {
+    console.log('Overriding register');
+    if (done) return overrideSubscribe(registration);
+    done = true;
+    return overrideSubscribe(registration);
+  });
 };
+
+navigator.serviceWorker.ready = new Promise((resolve, reject) => {
+  ready.then(registration => {
+    console.log('Overriding ready');
+    if (done) return resolve(overrideSubscribe(registration));
+    done = true;
+    resolve(overrideSubscribe(registration));
+  });
+});
 
 this.onpush = function (event) {
   console.log(event.data);
@@ -18,12 +54,16 @@ function subscribe() {
   return navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
     serviceWorkerRegistration.pushManager.subscribe({ userVisibleOnly: true })
       .then(function(subscription) {
+        console.log('response', subscription)
         const endpoint = subscription.endpoint;
         if (endpoint.indexOf('https://android.googleapis.com/gcm/send') === 0) {
           const endpointParts = endpoint.split('/');
           window.registrationId = endpointParts[endpointParts.length - 1];
+          window.endpoint = 'https://fcm.googleapis.com/fcm/send';
+        } else {
+          window.registrationId = null;
+          window.endpoint = endpoint;
         }
-        window.endpoint = 'https://android.googleapis.com/gcm/send';
         console.log(endpoint, registrationId);
       })
       .catch(function(e) {

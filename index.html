@@ -21,9 +21,7 @@
         $('#button4').click(function () {
           const myHeaders = new Headers();
 
-          myHeaders.append('Authorization', 'key=AAAAjdB-Ub8:APA91bHFuSNQi9_KQgscYbUfs-HWOCwEQwzoJ4L9MbgRgd9PZnF3kzyhpLfgmBnm3l3VpA-G7WJErH4U4sQqm19hG6-KLtCScoDs2YYXXCzYrkNW9tVX4hslmkx2pVeRUkrp-46Ykh-B');
-          myHeaders.append('Content-Type', 'application/json');
-
+          myHeaders.append('TTL', '86400');
 
           var myInit = {
             method: 'POST',
@@ -31,7 +29,6 @@
             mode: 'cors',
             cache: 'default',
             body: JSON.stringify({
-              registration_ids: [window.registrationId],
               notification: {
                 title: 'test',
                 body: 'test body'
