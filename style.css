@@ -11,3 +11,17 @@ iframe {
     border: 1px solid;
     margin: 10px 0;
 }
+
+.colors-gradient {
+    width: 150px;
+    height: 400px;
+    border: 1px solid black;
+}
+
+.color-container {
+    display: flex;
+}
+
+.color-container-column {
+    padding: 0 10px;
+}
