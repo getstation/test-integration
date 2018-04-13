@@ -44,6 +44,8 @@ $(function () {
   });
 
   $('#alertButton').click(function () {
-    window.alert('Alert popup');
+    const title = $('#alertTitle').val() | 'Alert popup';
+    const content = $('#alertContent').val();
+    window.alert(title, content);
   });
 })
